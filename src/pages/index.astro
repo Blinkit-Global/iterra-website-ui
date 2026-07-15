@@ -1,22 +1,13 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="es-AR">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Iterra</title>
-  </head>
-  <body>
-    <main class="grid min-h-dvh place-items-center px-6">
-      <div class="max-w-xl">
-        <p class="overline">Iterra</p>
-        <h1 class="t-h1">Convertimos el caos en estructura.</h1>
-        <p class="t-lede mt-4">Sitio en construcción. Muy pronto.</p>
-      </div>
-    </main>
-  </body>
-</html>
+<Base title="Sitio en construcción">
+  <main class="grid min-h-dvh place-items-center px-6">
+    <div class="max-w-xl">
+      <p class="overline">Iterra</p>
+      <h1 class="t-h1">Convertimos el caos en estructura.</h1>
+      <p class="t-lede mt-4">Sitio en construcción. Muy pronto.</p>
+    </div>
+  </main>
+</Base>
