@@ -45,6 +45,26 @@ test.describe('coming soon', () => {
     expect(Number(opacity)).toBeLessThanOrEqual(0.2);
   });
 
+  test('en mobile los easter eggs no se superponen', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'la composición específica se aplica debajo del breakpoint mobile');
+
+    const overlap = await page.evaluate(() => {
+      const box = (selector: string) => document.querySelector(selector)!.getBoundingClientRect();
+      const portrait = box('.hidden-portrait');
+      const topCopy = box('.pw1');
+      const bottomCopy = box('.pw2');
+      const easter = box('.easter');
+
+      return {
+        top: portrait.bottom - topCopy.top,
+        bottom: bottomCopy.bottom - easter.top,
+      };
+    });
+
+    expect(overlap.top).toBeLessThanOrEqual(0);
+    expect(overlap.bottom).toBeLessThanOrEqual(0);
+  });
+
   test('el revelado sigue al puntero', async ({ page, isMobile }) => {
     test.skip(isMobile, 'el seguimiento de puntero es solo desktop; en touch actúa la deriva');
 

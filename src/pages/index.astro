@@ -290,6 +290,9 @@ const shapeVars = [
     }
   }
   @media (max-width: 720px) {
+    .stage {
+      --r: var(--space-10);
+    }
     .vl,
     .vr {
       display: none;
@@ -298,17 +301,22 @@ const shapeVars = [
       font-size: 12px;
     }
     .pw1 {
-      top: 11%;
+      top: var(--space-8);
       max-width: 70vw;
     }
     .pw2 {
-      bottom: 15%;
+      bottom: calc(var(--space-10) + var(--space-4));
+    }
+    .easter {
+      bottom: var(--space-4);
     }
     .world-cup {
-      width: var(--space-8);
+      width: var(--space-7);
     }
     .hidden-portrait {
-      width: var(--space-9);
+      top: calc(var(--space-2) * -1);
+      width: var(--space-8);
+      opacity: 0.14;
     }
     .wbig {
       max-width: 80vw;
