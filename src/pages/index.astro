@@ -2,16 +2,13 @@
 /**
  * Coming Soon — a partir de «Iterra Coming Soon.dc.html» (Claude Design).
  * Un revelado radial sigue al puntero sobre la foto de follaje y descubre
- * las palabras de marca junto a las formas pilares en opacidad baja.
+ * las palabras de marca sobre el sello (Sol) como watermark central, que
+ * rota lentísimo — la única decoración en movimiento que permite el DS.
  * Interacción en vanilla TS + GSAP (ver <script> al final).
  */
 import { getImage } from 'astro:assets';
 
 import logoUrl from '../assets/brand/logo-color.svg?url';
-import arcoUrl from '../assets/brand/shapes/arco.svg?url';
-import hojaUrl from '../assets/brand/shapes/hoja.svg?url';
-import nucleoUrl from '../assets/brand/shapes/nucleo.svg?url';
-import piedraUrl from '../assets/brand/shapes/piedra.svg?url';
 import solUrl from '../assets/brand/shapes/sol.svg?url';
 import foliageImg from '../assets/images/foliage.jpg';
 import Base from '../layouts/Base.astro';
@@ -19,14 +16,7 @@ import Base from '../layouts/Base.astro';
 const foliage = await getImage({ src: foliageImg, format: 'webp', width: 1920, quality: 75 });
 
 // Los data URIs de Vite llevan comillas simples adentro: url() debe ir quoteado
-const shapeVars = [
-  `--ph:url("${foliage.src}")`,
-  `--shape-sol:url("${solUrl}")`,
-  `--shape-arco:url("${arcoUrl}")`,
-  `--shape-nucleo:url("${nucleoUrl}")`,
-  `--shape-hoja:url("${hojaUrl}")`,
-  `--shape-piedra:url("${piedraUrl}")`,
-].join(';');
+const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`].join(';');
 ---
 
 <Base title="Sitio en construcción">
@@ -41,11 +31,7 @@ const shapeVars = [
     <div class="lay glow" aria-hidden="true"></div>
 
     <div class="lay rev">
-      <div class="shp sh-sol" style="width:220px;height:220px;left:7%;top:9%"></div>
-      <div class="shp sh-arco" style="width:260px;height:260px;right:5%;top:11%"></div>
-      <div class="shp sh-nucleo" style="width:200px;height:200px;left:9%;bottom:10%"></div>
-      <div class="shp sh-hoja" style="width:190px;height:190px;right:9%;bottom:8%"></div>
-      <div class="shp sh-piedra" style="width:150px;height:150px;left:44%;top:4%"></div>
+      <div class="seal" aria-hidden="true"></div>
       <span class="wrd wbig pw1">Iterar: la práctica que nos acerca.</span>
       <span class="wrd vert vl">Antes de proponer, escuchamos</span>
       <span class="wrd vert vr">Antes de actuar, entendemos</span>
@@ -122,42 +108,34 @@ const shapeVars = [
     pointer-events: none;
   }
 
-  /* Formas pilares en opacidad baja: acompañan sin tapar a las palabras */
-  .shp {
+  /* El sello (Sol) como watermark central: grande, singular y en rotación
+     lentísima — la única decoración en movimiento que permite el DS */
+  .seal {
     position: absolute;
-    opacity: 0.2;
+    left: 50%;
+    top: 50%;
+    width: min(88vmin, 760px);
+    height: min(88vmin, 760px);
+    background: var(--iterra-lime);
+    opacity: 0.1;
     pointer-events: none;
+    -webkit-mask-image: var(--shape-sol);
+    mask-image: var(--shape-sol);
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-position: center;
     mask-position: center;
+    animation: seal-spin 18s linear infinite;
   }
-  .sh-sol {
-    background: var(--iterra-lime);
-    -webkit-mask-image: var(--shape-sol);
-    mask-image: var(--shape-sol);
-  }
-  .sh-arco {
-    background: var(--iterra-sky);
-    -webkit-mask-image: var(--shape-arco);
-    mask-image: var(--shape-arco);
-  }
-  .sh-nucleo {
-    background: var(--iterra-orange);
-    -webkit-mask-image: var(--shape-nucleo);
-    mask-image: var(--shape-nucleo);
-  }
-  .sh-hoja {
-    background: var(--iterra-pink);
-    -webkit-mask-image: var(--shape-hoja);
-    mask-image: var(--shape-hoja);
-  }
-  .sh-piedra {
-    background: var(--iterra-cream);
-    -webkit-mask-image: var(--shape-piedra);
-    mask-image: var(--shape-piedra);
+  @keyframes seal-spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
   }
 
   .wrd {
@@ -278,6 +256,9 @@ const shapeVars = [
   @media (prefers-reduced-motion: reduce) {
     .stage {
       cursor: default;
+    }
+    .seal {
+      animation: none;
     }
   }
 </style>

@@ -16,12 +16,16 @@ test.describe('coming soon', () => {
     await expect(page.getByText('Hacer historia.')).toBeAttached();
   });
 
-  test('las formas pilares acompañan con opacidad baja', async ({ page }) => {
-    const shapes = page.locator('.shp');
-    await expect(shapes).toHaveCount(5);
+  test('el sello acompaña como watermark sutil y rotando', async ({ page }) => {
+    const seal = page.locator('.seal');
+    await expect(seal).toHaveCount(1);
 
-    const opacity = await shapes.first().evaluate((el) => getComputedStyle(el).opacity);
-    expect(Number(opacity)).toBeLessThanOrEqual(0.3);
+    const { opacity, animationName } = await seal.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { opacity: cs.opacity, animationName: cs.animationName };
+    });
+    expect(Number(opacity)).toBeLessThanOrEqual(0.2);
+    expect(animationName).toContain('seal-spin');
   });
 
   test('el revelado sigue al puntero', async ({ page, isMobile }) => {
