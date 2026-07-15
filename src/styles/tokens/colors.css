@@ -1,0 +1,188 @@
+/* ===========================================================================
+   Iterra — Color
+   A grounded, organic system. A cream→ink neutral spine carries the work;
+   electric primaries (lime, sky) and two punchy accents (pink, signal-orange)
+   appear sparingly, like a seal stamped on paper. Brown and forest-green tie
+   the UI to imagery and full-bleed section backgrounds.
+
+   Only three groups of literal color values exist in this file — Brand
+   accents, Warm neutral spine, Status colors. Everything else (backgrounds,
+   text, borders, rings) is a semantic alias that points back into these
+   three groups, so there is nothing else to pick.
+   =========================================================================== */
+:root {
+  /* --- Brand accents — PRIMARY, one base swatch per family -------------------
+     Brand-locked anchors: Lime #D8FE5B · Sky #7FBCEE · Brown #573939 ·
+     Cream #EDE7D7 · Ink #16161D · Pink #FF8BEE · Orange #FD5F00 ------------- */
+  --iterra-lime: #d8fe5b; /* Lime — signature: energy, growth, clarity */
+  --iterra-sky: #7fbcee; /* Sky — calm, trust, openness              */
+  --iterra-brown: #573939; /* Brown — grounding maroon (wood, earth)   */
+  --iterra-cream: #ede7d7; /* Cream — the default page ground          */
+  --iterra-ink: #16161d; /* Ink — cool near-black                    */
+  --iterra-forest: #162a17; /* Forest — full-bleed section backgrounds  */
+  /* back-compat: components still reference the old names directly */
+  --iterra-blue: var(--iterra-sky);
+  --iterra-green: var(--iterra-forest);
+  --iterra-pink: #ff8bee; /* Pink — playful, human, unexpected         */
+  --iterra-orange: #fd5f00; /* Orange — signal: the seal, alerts        */
+
+  /* --- Warm neutral spine — BACKGROUNDS, cream → ink -------------------------
+     The default page/paper ramp everything else sits on. Cream (50) and
+     Ink (900) above are aliases into this ramp. ------------------------------ */
+  --warm-0: #fcfaf4; /* lightest — cards above the cream page            */
+  --warm-50: var(--iterra-cream); /* brand cream — the default page ground */
+  --warm-100: #e0d9c8;
+  --warm-200: #c8c0ac;
+  --warm-300: #a79e8c;
+  --warm-400: #837a6c;
+  --warm-500: #635b52;
+  --warm-600: #494440;
+  --warm-700: #343134;
+  --warm-800: #212129;
+  --warm-900: var(--iterra-ink); /* ink — cool near-black                    */
+
+  /* --- Status colors — ACCENTS for state ------------------------------------- */
+  --success: #3e7d3a;
+  --danger: #c8331a;
+  --warning: var(--iterra-orange);
+  --info: var(--iterra-blue-deep);
+
+  /* =========================================================================
+     Everything below is a shade VARIANT of a family above (soft/deep/deeper
+     or a full numeric ramp) — reference-only, kept for components that need
+     a lighter/darker step. Not something you need to pick from directly.
+     ========================================================================= */
+
+  --iterra-lime-soft: #effbc1;
+  --iterra-lime-deep: #a7c72e; /* lime that survives on light surfaces    */
+  --iterra-lime-deeper: #7c9518;
+
+  --iterra-blue-soft: #e4f0fb;
+  --iterra-blue-deep: #3b7bb8; /* readable blue for text / links          */
+  --iterra-blue-deeper: #295a8c;
+
+  --iterra-pink-soft: #fce2f9;
+  --iterra-pink-deep: #d24fbe;
+  --iterra-pink-deeper: #9d2e8d;
+
+  --iterra-orange-soft: #ffe2cf;
+  --iterra-orange-deep: #c94900;
+  --iterra-orange-deeper: #963700;
+
+  --brown-0: #f7efed;
+  --brown-50: #eadfdd; /* brand brown-soft                                */
+  --brown-100: #dbcac7;
+  --brown-200: #c3aba8; /* brand brown-tint                                */
+  --brown-300: #a6847f;
+  --brown-400: #856360;
+  --brown-500: #6b4b49;
+  --brown-600: #573939; /* brand brown — base                              */
+  --brown-700: #472e2e;
+  --brown-800: #3c2727; /* brand brown-deep                                */
+  --brown-900: #2b1c1c;
+
+  --green-0: #ebf1e9;
+  --green-50: #dce7d9;
+  --green-100: #c2d3bd;
+  --green-200: #9db597;
+  --green-300: #74906e;
+  --green-400: #526e4c;
+  --green-500: #3b5636;
+  --green-600: #2a4126;
+  --green-700: #21341e;
+  --green-800: #1a2c19;
+  --green-900: #162a17; /* = --iterra-green                                */
+  --green-950: #0d160c;
+  --iterra-green-soft: var(--green-50);
+  --iterra-green-deep: var(--green-950);
+
+  --success-soft: #dcebd7;
+  --danger-soft: #f8d9cf;
+  --warning-soft: var(--iterra-orange-soft);
+  --info-soft: var(--iterra-blue-soft);
+
+  /* back-compat aliases (older specimens referenced --iterra-clay) */
+  --iterra-clay: var(--iterra-brown);
+  --iterra-brown-soft: var(--brown-50);
+  --iterra-brown-deep: var(--brown-800);
+  --iterra-brown-tint: var(--brown-200);
+
+  /* Semantic aliases below — every one just points back into a token above.
+     Nothing here is a new color to pick; components bind to these names. */
+  --bg: var(--warm-50);
+  --bg-subtle: var(--warm-100);
+  --surface: var(--warm-0);
+  --surface-2: var(--warm-100);
+  --surface-inset: var(--warm-100);
+
+  --text-strong: var(--warm-900);
+  --text: var(--warm-800);
+  --text-muted: var(--warm-500);
+  --text-faint: var(--warm-400);
+  --text-on-accent: var(--warm-900);
+  --text-on-ink: var(--warm-50);
+
+  --border: var(--warm-200);
+  --border-strong: var(--warm-300);
+  --border-faint: var(--warm-100);
+
+  --accent: var(--iterra-lime);
+  --accent-press: var(--iterra-lime-deep);
+  --accent-2: var(--iterra-blue);
+  --accent-3: var(--iterra-pink);
+  --signal: var(--iterra-orange);
+
+  --ring: color-mix(in oklab, var(--iterra-blue) 60%, transparent);
+}
+
+/* --- Semantic: forest theme — scope with [data-theme="forest"] ------------ */
+[data-theme='forest'] {
+  --bg: var(--green-900);
+  --bg-subtle: var(--green-800);
+  --surface: var(--green-800);
+  --surface-2: var(--green-700);
+  --surface-inset: var(--green-950);
+
+  --text-strong: var(--warm-0);
+  --text: var(--green-50);
+  --text-muted: var(--green-200);
+  --text-faint: var(--green-400);
+  --text-on-accent: var(--warm-900);
+  --text-on-ink: var(--warm-50);
+
+  --border: var(--green-700);
+  --border-strong: var(--green-600);
+  --border-faint: var(--green-800);
+
+  --accent: var(--iterra-lime);
+  --accent-press: var(--iterra-lime-deep);
+  --accent-2: var(--iterra-blue);
+  --accent-3: var(--iterra-pink);
+  --signal: var(--iterra-orange);
+}
+
+/* --- Semantic: ink theme — scope with [data-theme="ink"] ------------------ */
+[data-theme='ink'] {
+  --bg: var(--warm-900);
+  --bg-subtle: var(--warm-800);
+  --surface: var(--warm-800);
+  --surface-2: var(--warm-700);
+  --surface-inset: var(--warm-900);
+
+  --text-strong: var(--warm-50);
+  --text: var(--warm-100);
+  --text-muted: var(--warm-300);
+  --text-faint: var(--warm-500);
+  --text-on-accent: var(--warm-900);
+  --text-on-ink: var(--warm-50);
+
+  --border: var(--warm-700);
+  --border-strong: var(--warm-600);
+  --border-faint: var(--warm-800);
+
+  --accent: var(--iterra-lime);
+  --accent-press: var(--iterra-lime-deep);
+  --accent-2: var(--iterra-blue);
+  --accent-3: var(--iterra-pink);
+  --signal: var(--iterra-orange);
+}
