@@ -3,7 +3,8 @@
  * Coming Soon — a partir de «Iterra Coming Soon.dc.html» (Claude Design).
  * Un revelado radial sigue al puntero sobre la foto de follaje y descubre
  * las palabras de marca sobre el sello (Sol) como watermark central, que
- * rota lentísimo — la única decoración en movimiento que permite el DS.
+ * rota lentísimo (2.5 min/vuelta) — la única decoración en movimiento
+ * que permite el DS.
  * Interacción en vanilla TS + GSAP (ver <script> al final).
  */
 import { getImage } from 'astro:assets';
@@ -127,7 +128,7 @@ const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`]
     mask-repeat: no-repeat;
     -webkit-mask-position: center;
     mask-position: center;
-    animation: seal-spin 18s linear infinite;
+    animation: seal-spin 150s linear infinite;
   }
   @keyframes seal-spin {
     from {
