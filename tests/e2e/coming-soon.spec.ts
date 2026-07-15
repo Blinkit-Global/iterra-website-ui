@@ -9,6 +9,13 @@ test.describe('coming soon', () => {
     await expect(page.getByRole('img', { name: 'Iterra' })).toBeVisible();
     await expect(page.getByText('Sitio en construcción', { exact: true })).toBeVisible();
     await expect(page.getByText('Muy pronto')).toBeVisible();
+
+    const centerOrder = await page
+      .locator('.ctr > *')
+      .evaluateAll((elements) =>
+        elements.map((element) => element.getAttribute('alt') ?? element.textContent?.trim()),
+      );
+    expect(centerOrder).toEqual(['Iterra', 'Sitio en construcción', 'Muy pronto']);
   });
 
   test('la capa de revelado tiene las frases de marca', async ({ page }) => {
