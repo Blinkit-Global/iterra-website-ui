@@ -1,0 +1,7 @@
+dist/
+.astro/
+.vercel/
+pnpm-lock.yaml
+coverage/
+playwright-report/
+test-results/
