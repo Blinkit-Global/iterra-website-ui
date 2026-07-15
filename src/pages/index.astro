@@ -11,13 +11,22 @@ import { getImage } from 'astro:assets';
 
 import logoUrl from '../assets/brand/logo-color.svg?url';
 import solUrl from '../assets/brand/shapes/sol.svg?url';
+import worldCupUrl from '../assets/icons/world-cup.svg?url';
 import foliageImg from '../assets/images/foliage.jpg';
+import hiddenPortraitImg from '../assets/images/hidden-portrait.png';
 import Base from '../layouts/Base.astro';
 
-const foliage = await getImage({ src: foliageImg, format: 'webp', width: 1920, quality: 75 });
+const [foliage, hiddenPortrait] = await Promise.all([
+  getImage({ src: foliageImg, format: 'webp', width: 1920, quality: 75 }),
+  getImage({ src: hiddenPortraitImg, format: 'webp', width: 512, quality: 75 }),
+]);
 
 // Los data URIs de Vite llevan comillas simples adentro: url() debe ir quoteado
-const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`].join(';');
+const shapeVars = [
+  `--ph:url("${foliage.src}")`,
+  `--shape-sol:url("${solUrl}")`,
+  `--world-cup:url("${worldCupUrl}")`,
+].join(';');
 ---
 
 <Base title="Sitio en construcción">
@@ -33,10 +42,23 @@ const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`]
 
     <div class="lay rev">
       <div class="seal" aria-hidden="true"></div>
+      <img
+        class="hidden-portrait"
+        src={hiddenPortrait.src}
+        alt=""
+        width="512"
+        height="512"
+        decoding="async"
+        aria-hidden="true"
+      />
       <span class="wrd wbig pw1">Iterar: la práctica que nos acerca.</span>
       <span class="wrd vert vl">Antes de proponer, escuchamos</span>
       <span class="wrd vert vr">Antes de actuar, entendemos</span>
       <span class="wrd wbig pw2">Hacer historia.</span>
+      <div class="easter">
+        <span class="world-cup" aria-hidden="true"></span>
+        <span class="wrd wbig easter-copy">¿Se viene la cuarta del Sol de Mayo?</span>
+      </div>
     </div>
 
     <div class="ctr">
@@ -138,6 +160,17 @@ const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`]
     }
   }
 
+  .hidden-portrait {
+    position: absolute;
+    left: 50%;
+    top: var(--space-2);
+    width: clamp(var(--space-10), 24vw, calc(var(--space-10) * 2));
+    height: auto;
+    opacity: 0.3;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
   .wrd {
     font-family: var(--font-mono);
     color: var(--iterra-cream);
@@ -172,6 +205,30 @@ const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`]
     right: clamp(28px, 5vw, 80px);
     bottom: 14%;
     text-align: right;
+  }
+  .easter {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-5);
+    width: calc(100% - var(--gutter) - var(--gutter));
+    max-width: var(--container-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    transform: translateX(-50%);
+  }
+  .world-cup {
+    width: clamp(var(--space-8), 10vw, var(--space-9));
+    aspect-ratio: 1;
+    flex: 0 0 auto;
+    background: var(--iterra-lime);
+    -webkit-mask: var(--world-cup) center / contain no-repeat;
+    mask: var(--world-cup) center / contain no-repeat;
+  }
+  .wbig.easter-copy {
+    min-width: 0;
+    text-align: left;
   }
   .wbig {
     font-family: var(--font-display);
@@ -246,6 +303,12 @@ const shapeVars = [`--ph:url("${foliage.src}")`, `--shape-sol:url("${solUrl}")`]
     }
     .pw2 {
       bottom: 15%;
+    }
+    .world-cup {
+      width: var(--space-8);
+    }
+    .hidden-portrait {
+      width: var(--space-10);
     }
     .wbig {
       max-width: 80vw;

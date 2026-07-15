@@ -14,6 +14,8 @@ test.describe('coming soon', () => {
   test('la capa de revelado tiene las frases de marca', async ({ page }) => {
     await expect(page.getByText('Iterar: la práctica que nos acerca.')).toBeAttached();
     await expect(page.getByText('Hacer historia.')).toBeAttached();
+    await expect(page.getByText('¿Se viene la cuarta del Sol de Mayo?')).toBeAttached();
+    await expect(page.locator('.world-cup')).toHaveCount(1);
   });
 
   test('el sello acompaña como watermark sutil y rotando', async ({ page }) => {
@@ -26,6 +28,14 @@ test.describe('coming soon', () => {
     });
     expect(Number(opacity)).toBeLessThanOrEqual(0.2);
     expect(animationName).toContain('seal-spin');
+  });
+
+  test('el retrato queda oculto y con baja opacidad', async ({ page }) => {
+    const portrait = page.locator('.hidden-portrait');
+    await expect(portrait).toHaveCount(1);
+
+    const opacity = await portrait.evaluate((element) => getComputedStyle(element).opacity);
+    expect(Number(opacity)).toBeLessThan(0.5);
   });
 
   test('el revelado sigue al puntero', async ({ page, isMobile }) => {
