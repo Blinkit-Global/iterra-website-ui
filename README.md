@@ -53,6 +53,6 @@ Vercel estándar; las env vars (`PUBLIC_SITE_URL`, `PUBLIC_GA4_ID`,
 ## Roadmap
 
 - [x] Scaffolding + design system en tokens
-- [x] Página «coming soon» (revelado con el mouse, del diseño de Claude Design)
+- [x] Página «coming soon» con revelado interactivo
 - [ ] Sitio completo: servicios, método, casos
 - [ ] Blog / customer stories dinámicos (CMS + SSR/ISR)
