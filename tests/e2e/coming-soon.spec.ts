@@ -11,32 +11,17 @@ test.describe('coming soon', () => {
     await expect(page.getByText('Muy pronto')).toBeVisible();
   });
 
-  test('arranca en la variante palabras y permite cambiarla', async ({ page }) => {
-    const stage = page.locator('#stage');
-    await expect(stage).toHaveAttribute('data-variant', 'palabras');
-    await expect(page.getByRole('button', { name: '03 · Palabras' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-
-    await page.getByRole('button', { name: '01 · Luz' }).click();
-    await expect(stage).toHaveAttribute('data-variant', 'luz');
-    await expect(page.getByRole('button', { name: '01 · Luz' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    await expect(page.getByRole('button', { name: '03 · Palabras' })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
-
-    await page.getByRole('button', { name: '02 · Formas' }).click();
-    await expect(stage).toHaveAttribute('data-variant', 'formas');
-  });
-
-  test('la variante palabras muestra las frases de marca', async ({ page }) => {
+  test('la capa de revelado tiene las frases de marca', async ({ page }) => {
     await expect(page.getByText('Iterar: la práctica que nos acerca.')).toBeAttached();
     await expect(page.getByText('Hacer historia.')).toBeAttached();
+  });
+
+  test('las formas pilares acompañan con opacidad baja', async ({ page }) => {
+    const shapes = page.locator('.shp');
+    await expect(shapes).toHaveCount(5);
+
+    const opacity = await shapes.first().evaluate((el) => getComputedStyle(el).opacity);
+    expect(Number(opacity)).toBeLessThanOrEqual(0.3);
   });
 
   test('el revelado sigue al puntero', async ({ page, isMobile }) => {

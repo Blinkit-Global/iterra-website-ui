@@ -1,8 +1,8 @@
 ---
 /**
- * Coming Soon — implementación fiel de «Iterra Coming Soon.dc.html»
- * (Claude Design). Un revelado radial sigue al puntero sobre la foto de
- * follaje; tres variantes muestran luz, formas pilares o palabras de marca.
+ * Coming Soon — a partir de «Iterra Coming Soon.dc.html» (Claude Design).
+ * Un revelado radial sigue al puntero sobre la foto de follaje y descubre
+ * las palabras de marca junto a las formas pilares en opacidad baja.
  * Interacción en vanilla TS + GSAP (ver <script> al final).
  */
 import { getImage } from 'astro:assets';
@@ -32,41 +32,20 @@ const shapeVars = [
 <Base title="Sitio en construcción">
   <link slot="head" rel="preload" as="image" href={foliage.src} />
 
-  <main
-    class="stage"
-    id="stage"
-    data-variant="palabras"
-    style={shapeVars}
-    aria-label="Iterra — sitio en construcción"
-  >
+  <main class="stage" id="stage" style={shapeVars} aria-label="Iterra — sitio en construcción">
     <h1 class="sr-only">Iterra — Sitio en construcción</h1>
 
     <div class="lay ph dim" aria-hidden="true"></div>
     <div class="lay tint" aria-hidden="true"></div>
     <div class="lay ph rev soft" aria-hidden="true"></div>
-    <div class="lay ph rev v-luz" aria-hidden="true"></div>
     <div class="lay glow" aria-hidden="true"></div>
 
-    <div class="lay rev v-formas" aria-hidden="true">
+    <div class="lay rev">
       <div class="shp sh-sol" style="width:220px;height:220px;left:7%;top:9%"></div>
       <div class="shp sh-arco" style="width:260px;height:260px;right:5%;top:11%"></div>
       <div class="shp sh-nucleo" style="width:200px;height:200px;left:9%;bottom:10%"></div>
       <div class="shp sh-hoja" style="width:190px;height:190px;right:9%;bottom:8%"></div>
       <div class="shp sh-piedra" style="width:150px;height:150px;left:44%;top:4%"></div>
-    </div>
-
-    <div class="lay rev words v-palabras">
-      <div class="shp sh-sol ghost" style="width:380px;height:380px;left:-110px;top:16%"></div>
-      <div
-        class="shp sh-arco ghost"
-        style="width:420px;height:420px;right:-140px;bottom:-90px;transform:rotate(8deg)"
-      >
-      </div>
-      <div
-        class="shp sh-hoja ghost"
-        style="width:240px;height:240px;right:16%;top:-70px;transform:rotate(-14deg)"
-      >
-      </div>
       <span class="wrd wbig pw1">Iterar: la práctica que nos acerca.</span>
       <span class="wrd vert vl">Antes de proponer, escuchamos</span>
       <span class="wrd vert vr">Antes de actuar, entendemos</span>
@@ -77,18 +56,6 @@ const shapeVars = [
       <span class="ovl">Sitio en construcción</span>
       <img class="brandlogo" src={logoUrl} alt="Iterra" width="276" height="113" />
       <span class="soon">Muy pronto</span>
-    </div>
-
-    <div class="sw">
-      <button class="swb" type="button" data-set-variant="luz" aria-pressed="false">
-        01 · Luz
-      </button>
-      <button class="swb" type="button" data-set-variant="formas" aria-pressed="false">
-        02 · Formas
-      </button>
-      <button class="swb on" type="button" data-set-variant="palabras" aria-pressed="true">
-        03 · Palabras
-      </button>
     </div>
   </main>
 </Base>
@@ -115,8 +82,6 @@ const shapeVars = [
   .lay {
     position: absolute;
     inset: 0;
-    transition: opacity var(--dur-slow, 360ms) var(--ease);
-    transition-duration: 0.5s;
   }
   .ph {
     background-image: var(--ph);
@@ -157,21 +122,11 @@ const shapeVars = [
     pointer-events: none;
   }
 
-  /* Variantes: solo la capa de la variante activa es visible */
-  .v-luz,
-  .v-formas,
-  .v-palabras {
-    opacity: 0;
-    pointer-events: none;
-  }
-  .stage[data-variant='luz'] .v-luz,
-  .stage[data-variant='formas'] .v-formas,
-  .stage[data-variant='palabras'] .v-palabras {
-    opacity: 1;
-  }
-
+  /* Formas pilares en opacidad baja: acompañan sin tapar a las palabras */
   .shp {
     position: absolute;
+    opacity: 0.2;
+    pointer-events: none;
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;
@@ -204,10 +159,6 @@ const shapeVars = [
     -webkit-mask-image: var(--shape-piedra);
     mask-image: var(--shape-piedra);
   }
-  .ghost {
-    opacity: 0.13;
-    pointer-events: none;
-  }
 
   .wrd {
     font-family: var(--font-mono);
@@ -216,9 +167,6 @@ const shapeVars = [
     text-transform: uppercase;
     font-size: 15px;
     white-space: nowrap;
-  }
-  .words {
-    padding: clamp(68px, 10vh, 100px) clamp(20px, 4vw, 56px) clamp(56px, 10vh, 100px);
   }
   .vert {
     writing-mode: vertical-rl;
@@ -297,38 +245,6 @@ const shapeVars = [
     margin-top: 14px;
   }
 
-  .sw {
-    position: absolute;
-    right: 36px;
-    bottom: 24px;
-    display: flex;
-    gap: 6px;
-    pointer-events: auto;
-  }
-  .swb {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: var(--ls-caps);
-    text-transform: uppercase;
-    background: none;
-    border: var(--bw) solid color-mix(in srgb, var(--iterra-cream) 30%, transparent);
-    color: color-mix(in srgb, var(--iterra-cream) 65%, transparent);
-    padding: 7px 12px;
-    border-radius: var(--r-pill);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all var(--dur) var(--ease);
-  }
-  .swb:hover {
-    color: var(--iterra-ink);
-    background: color-mix(in srgb, var(--iterra-cream) 90%, transparent);
-  }
-  .swb.on {
-    background: var(--iterra-lime);
-    border-color: var(--iterra-lime);
-    color: var(--iterra-ink);
-  }
-
   @media (max-height: 620px) {
     .wrd {
       font-size: 12px;
@@ -342,11 +258,6 @@ const shapeVars = [
     .vl,
     .vr {
       display: none;
-    }
-    .sw {
-      left: 12px;
-      right: 12px;
-      justify-content: center;
     }
     .wrd {
       font-size: 12px;
@@ -365,9 +276,6 @@ const shapeVars = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lay {
-      transition: none;
-    }
     .stage {
       cursor: default;
     }
@@ -379,50 +287,36 @@ const shapeVars = [
 
   const stage = document.getElementById('stage');
 
-  if (stage) {
-    // Conmutador de variantes (luz / formas / palabras)
-    const buttons = stage.querySelectorAll<HTMLButtonElement>('[data-set-variant]');
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        stage.dataset.variant = btn.dataset.setVariant;
-        buttons.forEach((b) => {
-          b.classList.toggle('on', b === btn);
-          b.setAttribute('aria-pressed', String(b === btn));
-        });
-      });
+  // Revelado que sigue al puntero, con deriva Lissajous cuando no hay
+  // input por 2.5s (cubre touch y el primer paint sin mouse).
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (stage && !reduced) {
+    const setX = gsap.quickSetter(stage, '--mx');
+    const setY = gsap.quickSetter(stage, '--my');
+    const cur = { x: 0.5, y: 0.42 };
+    const tgt = { x: 0.5, y: 0.42 };
+    let lastInput = 0;
+    const t0 = performance.now();
+
+    gsap.ticker.add(() => {
+      const now = performance.now();
+      if (now - lastInput > 2500) {
+        const t = (now - t0) / 1000;
+        tgt.x = 0.5 + 0.33 * Math.sin(t * 0.35);
+        tgt.y = 0.45 + 0.28 * Math.sin(t * 0.23 + 1.3);
+      }
+      cur.x += (tgt.x - cur.x) * 0.07;
+      cur.y += (tgt.y - cur.y) * 0.07;
+      setX(`${(cur.x * 100).toFixed(2)}%`);
+      setY(`${(cur.y * 100).toFixed(2)}%`);
     });
 
-    // Revelado que sigue al puntero, con deriva Lissajous cuando no hay
-    // input por 2.5s (cubre touch y el primer paint sin mouse).
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!reduced) {
-      const setX = gsap.quickSetter(stage, '--mx');
-      const setY = gsap.quickSetter(stage, '--my');
-      const cur = { x: 0.5, y: 0.42 };
-      const tgt = { x: 0.5, y: 0.42 };
-      let lastInput = 0;
-      const t0 = performance.now();
-
-      gsap.ticker.add(() => {
-        const now = performance.now();
-        if (now - lastInput > 2500) {
-          const t = (now - t0) / 1000;
-          tgt.x = 0.5 + 0.33 * Math.sin(t * 0.35);
-          tgt.y = 0.45 + 0.28 * Math.sin(t * 0.23 + 1.3);
-        }
-        cur.x += (tgt.x - cur.x) * 0.07;
-        cur.y += (tgt.y - cur.y) * 0.07;
-        setX(`${(cur.x * 100).toFixed(2)}%`);
-        setY(`${(cur.y * 100).toFixed(2)}%`);
-      });
-
-      stage.addEventListener('pointermove', (e) => {
-        const r = stage.getBoundingClientRect();
-        tgt.x = (e.clientX - r.left) / r.width;
-        tgt.y = (e.clientY - r.top) / r.height;
-        lastInput = performance.now();
-      });
-    }
+    stage.addEventListener('pointermove', (e) => {
+      const r = stage.getBoundingClientRect();
+      tgt.x = (e.clientX - r.left) / r.width;
+      tgt.y = (e.clientY - r.top) / r.height;
+      lastInput = performance.now();
+    });
   }
 </script>
