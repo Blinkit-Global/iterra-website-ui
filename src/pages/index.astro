@@ -41,7 +41,6 @@ const shapeVars = [
     <div class="lay glow" aria-hidden="true"></div>
 
     <div class="lay rev">
-      <div class="seal" aria-hidden="true"></div>
       <img
         class="hidden-portrait"
         src={hiddenPortrait.src}
@@ -51,6 +50,7 @@ const shapeVars = [
         decoding="async"
         aria-hidden="true"
       />
+      <div class="seal" aria-hidden="true"></div>
       <span class="wrd wbig pw1">Iterar: la práctica que nos acerca.</span>
       <span class="wrd vert vl">Antes de proponer, escuchamos</span>
       <span class="wrd vert vr">Antes de actuar, entendemos</span>
@@ -163,10 +163,10 @@ const shapeVars = [
   .hidden-portrait {
     position: absolute;
     left: 50%;
-    top: var(--space-2);
-    width: clamp(var(--space-10), 24vw, calc(var(--space-10) * 2));
+    top: calc(var(--space-5) * -1);
+    width: clamp(var(--space-9), 18vw, calc(var(--space-10) + var(--space-8)));
     height: auto;
-    opacity: 0.3;
+    opacity: 0.2;
     pointer-events: none;
     transform: translateX(-50%);
   }
@@ -308,7 +308,7 @@ const shapeVars = [
       width: var(--space-8);
     }
     .hidden-portrait {
-      width: var(--space-10);
+      width: var(--space-9);
     }
     .wbig {
       max-width: 80vw;

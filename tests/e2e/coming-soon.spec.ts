@@ -42,7 +42,7 @@ test.describe('coming soon', () => {
     await expect(portrait).toHaveCount(1);
 
     const opacity = await portrait.evaluate((element) => getComputedStyle(element).opacity);
-    expect(Number(opacity)).toBeLessThan(0.5);
+    expect(Number(opacity)).toBeLessThanOrEqual(0.2);
   });
 
   test('el revelado sigue al puntero', async ({ page, isMobile }) => {
