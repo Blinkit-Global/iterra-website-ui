@@ -1,13 +1,423 @@
 ---
+/**
+ * Coming Soon — implementación fiel de «Iterra Coming Soon.dc.html»
+ * (Claude Design). Un revelado radial sigue al puntero sobre la foto de
+ * follaje; tres variantes muestran luz, formas pilares o palabras de marca.
+ * Interacción en vanilla TS + GSAP (ver <script> al final).
+ */
+import { getImage } from 'astro:assets';
+
+import logoUrl from '../assets/brand/logo-color.svg?url';
+import arcoUrl from '../assets/brand/shapes/arco.svg?url';
+import hojaUrl from '../assets/brand/shapes/hoja.svg?url';
+import nucleoUrl from '../assets/brand/shapes/nucleo.svg?url';
+import piedraUrl from '../assets/brand/shapes/piedra.svg?url';
+import solUrl from '../assets/brand/shapes/sol.svg?url';
+import foliageImg from '../assets/images/foliage.jpg';
 import Base from '../layouts/Base.astro';
+
+const foliage = await getImage({ src: foliageImg, format: 'webp', width: 1920, quality: 75 });
+
+// Los data URIs de Vite llevan comillas simples adentro: url() debe ir quoteado
+const shapeVars = [
+  `--ph:url("${foliage.src}")`,
+  `--shape-sol:url("${solUrl}")`,
+  `--shape-arco:url("${arcoUrl}")`,
+  `--shape-nucleo:url("${nucleoUrl}")`,
+  `--shape-hoja:url("${hojaUrl}")`,
+  `--shape-piedra:url("${piedraUrl}")`,
+].join(';');
 ---
 
 <Base title="Sitio en construcción">
-  <main class="grid min-h-dvh place-items-center px-6">
-    <div class="max-w-xl">
-      <p class="overline">Iterra</p>
-      <h1 class="t-h1">Convertimos el caos en estructura.</h1>
-      <p class="t-lede mt-4">Sitio en construcción. Muy pronto.</p>
+  <link slot="head" rel="preload" as="image" href={foliage.src} />
+
+  <main
+    class="stage"
+    id="stage"
+    data-variant="palabras"
+    style={shapeVars}
+    aria-label="Iterra — sitio en construcción"
+  >
+    <h1 class="sr-only">Iterra — Sitio en construcción</h1>
+
+    <div class="lay ph dim" aria-hidden="true"></div>
+    <div class="lay tint" aria-hidden="true"></div>
+    <div class="lay ph rev soft" aria-hidden="true"></div>
+    <div class="lay ph rev v-luz" aria-hidden="true"></div>
+    <div class="lay glow" aria-hidden="true"></div>
+
+    <div class="lay rev v-formas" aria-hidden="true">
+      <div class="shp sh-sol" style="width:220px;height:220px;left:7%;top:9%"></div>
+      <div class="shp sh-arco" style="width:260px;height:260px;right:5%;top:11%"></div>
+      <div class="shp sh-nucleo" style="width:200px;height:200px;left:9%;bottom:10%"></div>
+      <div class="shp sh-hoja" style="width:190px;height:190px;right:9%;bottom:8%"></div>
+      <div class="shp sh-piedra" style="width:150px;height:150px;left:44%;top:4%"></div>
+    </div>
+
+    <div class="lay rev words v-palabras">
+      <div class="shp sh-sol ghost" style="width:380px;height:380px;left:-110px;top:16%"></div>
+      <div
+        class="shp sh-arco ghost"
+        style="width:420px;height:420px;right:-140px;bottom:-90px;transform:rotate(8deg)"
+      >
+      </div>
+      <div
+        class="shp sh-hoja ghost"
+        style="width:240px;height:240px;right:16%;top:-70px;transform:rotate(-14deg)"
+      >
+      </div>
+      <span class="wrd wbig pw1">Iterar: la práctica que nos acerca.</span>
+      <span class="wrd vert vl">Antes de proponer, escuchamos</span>
+      <span class="wrd vert vr">Antes de actuar, entendemos</span>
+      <span class="wrd wbig pw2">Hacer historia.</span>
+    </div>
+
+    <div class="ctr">
+      <span class="ovl">Sitio en construcción</span>
+      <img class="brandlogo" src={logoUrl} alt="Iterra" width="276" height="113" />
+      <span class="soon">Muy pronto</span>
+    </div>
+
+    <div class="sw">
+      <button class="swb" type="button" data-set-variant="luz" aria-pressed="false">
+        01 · Luz
+      </button>
+      <button class="swb" type="button" data-set-variant="formas" aria-pressed="false">
+        02 · Formas
+      </button>
+      <button class="swb on" type="button" data-set-variant="palabras" aria-pressed="true">
+        03 · Palabras
+      </button>
     </div>
   </main>
 </Base>
+
+<style is:global>
+  body {
+    overflow: hidden;
+  }
+</style>
+
+<style>
+  .stage {
+    position: fixed;
+    inset: 0;
+    border: 12px solid var(--iterra-cream);
+    background: var(--iterra-ink);
+    overflow: hidden;
+    cursor: crosshair;
+    --mx: 50%;
+    --my: 42%;
+    --r: 260px;
+  }
+
+  .lay {
+    position: absolute;
+    inset: 0;
+    transition: opacity var(--dur-slow, 360ms) var(--ease);
+    transition-duration: 0.5s;
+  }
+  .ph {
+    background-image: var(--ph);
+    background-size: cover;
+    background-position: center 30%;
+  }
+  .dim {
+    filter: brightness(0.42) saturate(0.8);
+  }
+  .tint {
+    background: color-mix(in srgb, var(--iterra-ink) 38%, transparent);
+  }
+  .rev {
+    -webkit-mask-image: radial-gradient(
+      circle var(--r) at var(--mx) var(--my),
+      #000 0%,
+      #000 45%,
+      transparent 98%
+    );
+    mask-image: radial-gradient(
+      circle var(--r) at var(--mx) var(--my),
+      #000 0%,
+      #000 45%,
+      transparent 98%
+    );
+  }
+  .soft {
+    opacity: 0.45;
+  }
+  .glow {
+    background: radial-gradient(
+      circle calc(var(--r) * 1.35) at var(--mx) var(--my),
+      color-mix(in srgb, var(--iterra-cream) 16%, transparent),
+      color-mix(in srgb, var(--iterra-lime) 6%, transparent) 42%,
+      transparent 72%
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+
+  /* Variantes: solo la capa de la variante activa es visible */
+  .v-luz,
+  .v-formas,
+  .v-palabras {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .stage[data-variant='luz'] .v-luz,
+  .stage[data-variant='formas'] .v-formas,
+  .stage[data-variant='palabras'] .v-palabras {
+    opacity: 1;
+  }
+
+  .shp {
+    position: absolute;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+  .sh-sol {
+    background: var(--iterra-lime);
+    -webkit-mask-image: var(--shape-sol);
+    mask-image: var(--shape-sol);
+  }
+  .sh-arco {
+    background: var(--iterra-sky);
+    -webkit-mask-image: var(--shape-arco);
+    mask-image: var(--shape-arco);
+  }
+  .sh-nucleo {
+    background: var(--iterra-orange);
+    -webkit-mask-image: var(--shape-nucleo);
+    mask-image: var(--shape-nucleo);
+  }
+  .sh-hoja {
+    background: var(--iterra-pink);
+    -webkit-mask-image: var(--shape-hoja);
+    mask-image: var(--shape-hoja);
+  }
+  .sh-piedra {
+    background: var(--iterra-cream);
+    -webkit-mask-image: var(--shape-piedra);
+    mask-image: var(--shape-piedra);
+  }
+  .ghost {
+    opacity: 0.13;
+    pointer-events: none;
+  }
+
+  .wrd {
+    font-family: var(--font-mono);
+    color: var(--iterra-cream);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .words {
+    padding: clamp(68px, 10vh, 100px) clamp(20px, 4vw, 56px) clamp(56px, 10vh, 100px);
+  }
+  .vert {
+    writing-mode: vertical-rl;
+    position: absolute;
+  }
+  .vl {
+    left: clamp(16px, 3vw, 48px);
+    top: 66%;
+    transform: translateY(-50%);
+  }
+  .vr {
+    right: clamp(16px, 3vw, 48px);
+    top: 32%;
+    transform: translateY(-50%);
+  }
+  .pw1 {
+    position: absolute;
+    left: clamp(28px, 5vw, 72px);
+    top: clamp(28px, 7vh, 64px);
+    text-align: left;
+    max-width: min(300px, 26vw);
+  }
+  .pw2 {
+    position: absolute;
+    right: clamp(28px, 5vw, 80px);
+    bottom: 14%;
+    text-align: right;
+  }
+  .wbig {
+    font-family: var(--font-display);
+    text-transform: none;
+    letter-spacing: -0.02em;
+    font-size: clamp(20px, min(3vw, 4.2vh), 40px);
+    font-weight: var(--fw-semibold);
+    color: var(--iterra-lime);
+    white-space: normal;
+    max-width: min(340px, 32vw);
+    line-height: 1.12;
+    text-wrap: balance;
+    text-align: right;
+  }
+  .pw1.wbig {
+    text-align: left;
+  }
+
+  .ctr {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 28px;
+    pointer-events: none;
+    padding: 0 24px;
+  }
+  .ovl {
+    font-family: var(--font-mono);
+    color: color-mix(in srgb, var(--iterra-cream) 85%, transparent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  .brandlogo {
+    width: clamp(320px, 44vw, 620px);
+    height: auto;
+    filter: drop-shadow(0 8px 32px color-mix(in srgb, var(--iterra-ink) 40%, transparent));
+  }
+  .soon {
+    font-family: var(--font-mono);
+    color: color-mix(in srgb, var(--iterra-cream) 60%, transparent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-top: 14px;
+  }
+
+  .sw {
+    position: absolute;
+    right: 36px;
+    bottom: 24px;
+    display: flex;
+    gap: 6px;
+    pointer-events: auto;
+  }
+  .swb {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    background: none;
+    border: var(--bw) solid color-mix(in srgb, var(--iterra-cream) 30%, transparent);
+    color: color-mix(in srgb, var(--iterra-cream) 65%, transparent);
+    padding: 7px 12px;
+    border-radius: var(--r-pill);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--dur) var(--ease);
+  }
+  .swb:hover {
+    color: var(--iterra-ink);
+    background: color-mix(in srgb, var(--iterra-cream) 90%, transparent);
+  }
+  .swb.on {
+    background: var(--iterra-lime);
+    border-color: var(--iterra-lime);
+    color: var(--iterra-ink);
+  }
+
+  @media (max-height: 620px) {
+    .wrd {
+      font-size: 12px;
+    }
+    .wbig {
+      font-size: clamp(18px, 4.2vh, 28px);
+      max-width: 46vw;
+    }
+  }
+  @media (max-width: 720px) {
+    .vl,
+    .vr {
+      display: none;
+    }
+    .wrd {
+      font-size: 12px;
+    }
+    .pw1 {
+      top: 11%;
+      max-width: 70vw;
+    }
+    .pw2 {
+      bottom: 15%;
+    }
+    .wbig {
+      max-width: 80vw;
+      font-size: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lay {
+      transition: none;
+    }
+    .stage {
+      cursor: default;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const stage = document.getElementById('stage');
+
+  if (stage) {
+    // Conmutador de variantes (luz / formas / palabras)
+    const buttons = stage.querySelectorAll<HTMLButtonElement>('[data-set-variant]');
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        stage.dataset.variant = btn.dataset.setVariant;
+        buttons.forEach((b) => {
+          b.classList.toggle('on', b === btn);
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+      });
+    });
+
+    // Revelado que sigue al puntero, con deriva Lissajous cuando no hay
+    // input por 2.5s (cubre touch y el primer paint sin mouse).
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!reduced) {
+      const setX = gsap.quickSetter(stage, '--mx');
+      const setY = gsap.quickSetter(stage, '--my');
+      const cur = { x: 0.5, y: 0.42 };
+      const tgt = { x: 0.5, y: 0.42 };
+      let lastInput = 0;
+      const t0 = performance.now();
+
+      gsap.ticker.add(() => {
+        const now = performance.now();
+        if (now - lastInput > 2500) {
+          const t = (now - t0) / 1000;
+          tgt.x = 0.5 + 0.33 * Math.sin(t * 0.35);
+          tgt.y = 0.45 + 0.28 * Math.sin(t * 0.23 + 1.3);
+        }
+        cur.x += (tgt.x - cur.x) * 0.07;
+        cur.y += (tgt.y - cur.y) * 0.07;
+        setX(`${(cur.x * 100).toFixed(2)}%`);
+        setY(`${(cur.y * 100).toFixed(2)}%`);
+      });
+
+      stage.addEventListener('pointermove', (e) => {
+        const r = stage.getBoundingClientRect();
+        tgt.x = (e.clientX - r.left) / r.width;
+        tgt.y = (e.clientY - r.top) / r.height;
+        lastInput = performance.now();
+      });
+    }
+  }
+</script>
