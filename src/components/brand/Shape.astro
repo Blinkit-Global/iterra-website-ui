@@ -1,0 +1,40 @@
+---
+/**
+ * Forma de marca de Iterra. Renderiza uno de los cinco pilares con su color
+ * canónico bloqueado. `color` solo admite override para watermarks
+ * tono-sobre-tono deliberados (regla de marca) — nunca para cruzar pilares.
+ */
+import { SHAPES, type ShapeName } from '../../lib/shapes';
+import arco from '../../assets/brand/shapes/arco.svg?raw';
+import hoja from '../../assets/brand/shapes/hoja.svg?raw';
+import nucleo from '../../assets/brand/shapes/nucleo.svg?raw';
+import piedra from '../../assets/brand/shapes/piedra.svg?raw';
+import sol from '../../assets/brand/shapes/sol.svg?raw';
+
+interface Props {
+  name: ShapeName;
+  /** Ancho/alto en px o cualquier unidad CSS. Default: 200px (tamaño natural). */
+  size?: string;
+  /** Solo para watermarks tono-sobre-tono. Default: color canónico del pilar. */
+  color?: string;
+  class?: string;
+}
+
+const svgs: Record<ShapeName, string> = { sol, arco, nucleo, hoja, piedra };
+
+const { name, size = '200px', color = SHAPES[name].color, class: className } = Astro.props;
+---
+
+<div
+  class:list={['iterra-shape', className]}
+  style={`color:${color};width:${size};height:${size}`}
+  set:html={svgs[name]}
+/>
+
+<style>
+  .iterra-shape :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
